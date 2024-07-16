@@ -21,8 +21,6 @@ Base URL: [https://info-tube.zaco.workers.dev](https://info-tube.zaco.workers.de
 
 `/@handleName`
 
-`/watch?v=videoID`
-
 **Example:** 
 
 `info-tube.zaco.workers.dev/channel/channelID`
