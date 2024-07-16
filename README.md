@@ -1,4 +1,4 @@
-<div align="center"><a href="https://info-tube.zaco.workers.dev"><img width="70%" src="info-tube-img.png" alt="info-tube"></a></div>
+<div align="center"><a href="https://info-tube.zaco.workers.dev"><img width="300px" height="75px" src="info-tube-img.png" alt="info-tube"></a></div>
 
 <br>
 <br>
