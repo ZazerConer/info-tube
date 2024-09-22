@@ -24,7 +24,13 @@ async function handler(event) {
   } else if (protocol.startsWith("https:")) {
     if (pathname.startsWith("/channel/") || pathname.startsWith("/c/") || pathname.startsWith("/user/") || pathname.startsWith("/@")) {
       var url = `https://www.youtube.com${pathname}`;
-      var response = await fetch(url);
+      var response = await fetch(url, {
+        cf: {
+          cacheTtl: 5,
+          cacheEverything: true
+        },
+      });
+
       if (response.ok) {
         var text = await response.text();
         let channelLogo, channelName, channelDescription, channelId, channelUrl;
@@ -47,12 +53,15 @@ async function handler(event) {
 }
           `;
 
-          return new Response(json, {
+          response = new Response(json, {
             headers: {
               "Access-Control-Allow-Origin": "*",
               "Content-Type": "application/json"
             },
           });
+          response.headers.set("Cache-Control", "max-age=1500");
+
+          return response;
         /* Channel (information) */
         } else {
           channelLogo = text.split('itemprop="thumbnailUrl"')[1].split('"')[1];
@@ -72,12 +81,15 @@ async function handler(event) {
 }
           `;
 
-          return new Response(json, {
+          response = new Response(json, {
             headers: {
               "Access-Control-Allow-Origin": "*",
               "Content-Type": "application/json"
             },
           });
+          response.headers.set("Cache-Control", "max-age=1500");
+
+          return response;
         }
       } else {
         var msgError = `<p>Youtube URL (<b><code>https://www.youtube.com${pathname}</code></b>) failed with status: <b>${response.status}</b></p>`;
@@ -90,7 +102,12 @@ async function handler(event) {
     /* Video (information) */
     } else if (pathname.startsWith("/watch")) {
       var url = `https://www.youtube.com/watch${search}`;
-      var response = await fetch(url);
+      var response = await fetch(url, {
+        cf: {
+          cacheTtl: 5,
+          cacheEverything: true
+        },
+      });
 
       if (response.ok) {
         var text = await response.text();
@@ -124,12 +141,15 @@ async function handler(event) {
 }
           `;
 
-          return new Response(json, {
+          response = new Response(json, {
             headers: {
               "Access-Control-Allow-Origin": "*",
               "Content-Type": "application/json"
             },
           });
+          response.headers.set("Cache-Control", "max-age=1500");
+
+          return response;
         } else {
           var msgError = `<p>Youtube URL (<b><code>https://www.youtube.com\watch${search}</code></b>) failed with status: <b>${response.status}</b></p>`;
           return new Response(msgError, {
@@ -149,7 +169,13 @@ async function handler(event) {
     /* Video (live) */
     } else if (pathname.startsWith("/live/")) {
       var url = `https://www.youtube.com${pathname}`;
-      var response = await fetch(url);
+      var response = await fetch(url, {
+        cf: {
+          cacheTtl: 5,
+          cacheEverything: true
+        },
+      });
+
       if (response.ok) {
         var text = await response.text();
         let videoAuthorName, videoAuthorUrl, videoTitle, videoDescription, videoView, videoId, videoThumbnail, videoEmbed;
@@ -178,12 +204,15 @@ async function handler(event) {
 }
           `;
 
-          return new Response(json, {
+          response = new Response(json, {
             headers: {
               "Access-Control-Allow-Origin": "*",
               "Content-Type": "application/json"
             },
           });
+          response.headers.set("Cache-Control", "max-age=1500");
+
+          return response;
         /* Video (live - information) */
         } else {
           var responseUrl = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${videoId}`);
@@ -207,12 +236,15 @@ async function handler(event) {
 }
             `;
 
-            return new Response(json, {
+            response = new Response(json, {
               headers: {
                 "Access-Control-Allow-Origin": "*",
                 "Content-Type": "application/json"
               },
             });
+            response.headers.set("Cache-Control", "max-age=1500");
+
+            return response;
           } else {
             var msgError = `<p>Youtube URL (<b><code>https://www.youtube.com${pathname}</code></b>) failed with status: <b>${response.status}</b></p>`;
             return new Response(msgError, {
@@ -243,7 +275,7 @@ async function handler(event) {
             /* Set headers for your content source (same-site | same-origin | cross-origin) */
             "Cross-Origin-Resource-Policy": "cross-origin",
             /* Set the content source type */
-            "Content-Type": "text/html;charset=utf-8"
+            "Content-Type": "text/html;charset=UTF-8"
           },
         });
       }
